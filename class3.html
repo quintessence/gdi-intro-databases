@@ -209,7 +209,7 @@ Error: column BrandName is not unique
 					<ul>
 						<li>Uniquely identifies each row in a database table.</li>
 						<li>There can be additional UNIQUE columns, but only one PRIMARY KEY.</li>
-						<li>We use prmary keys as unique IDs to refer to table rows.</li>
+						<li>We use primary keys as unique IDs to refer to table rows.</li>
 						<li>Primary keys <em>become</em> foreign keys when creating relations among tables.</li>
 					</ul>
 					<p><em>Note: Due to an oversight in SQLite, primary keys can be NULL in SQLite. This is not true for other relational databases.</em></p>
@@ -312,7 +312,7 @@ Id|Title|Author|ISBN
 					<pre><code contenteditable class="JavaScript">sqlite> INSERT INTO Books VALUES(3, 'Crime and Punishment', 'Fyodor Dostoevsky',
    ...> '978-1840224306');
 </code></pre>
-					<p>In this case, we must supply all values.</p>
+					<p>In this case, we must supply all values in the same order as the columns in the table.</p>
 				</section>
 
 				<section>
