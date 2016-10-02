@@ -70,82 +70,50 @@
         </section>
 
 				<section>
-					<h3>Why SQLite?</h3>
+					<h3>Why MySQL?</h3>
 					<ul>
-						<li>Flexible relational database that works with a huge range of software and hardware</li>
-						<li>Embeddable database with small footprint, often used for development</li>
-						<li>Supported by languages such as</li>
-						<li><ul>
-							<li>C</li>
-							<li>Java</li>
-							<li>Perl</li>
-							<li>Ruby</li>
-							<li>Python</li>
-							<li>Objective C</li>
-							<li>...and more!</li>
-						</ul></li>
+						<li>Provides a implementation of a SQL database very well suited for small to medium web pages</li>
+						<li>Usually available on shared hosting packages</li>
+						<li>Can be easily set up in a Windows or Linux/Unix environment</li>
+						<li>Supported by many languages including Java, Python, Ruby, and C++.</li>
 					</ul>
 				</section>
 
 				<section>
-					<h3>SQLite - Distinctive Features</h3>
+					<h3>Some Important Features of MySQL</h3>
 					<ul>
-						<li>Zero-Configuration</li>
-						<li>Serverless - no separate server process is required. SQLite reads and writes directly to disk.</li>
-						<li>Single, compact database file</li>
-						<li>Stable cross-platform database file</li>
+						<li>Uses a client-server architecture: this means there is a database server running MySQL itself and then arbitrarily many clients (e.g. applications) connecting to that server.</li>
+						<li>Supports SQL as its database language. Although we won't be covering them in detail, it is important to know that not all database technologies use/support SQL syntax.</li>
+						<li>Supports replication, which means that the master database is replicated into one or more instances. If anything happens to the master, one of these other instances becomes the master to reduce/eliminate downtime.</li>
 					</ul>
 				</section>
 
 				<section>
-					<h3>SQLite - What's it good for?</h3>
+					<h3>What MySQL is good for</h3>
 					<ul>
-						<li>Desktop applications</li>
-						<li>Mobile apps</li>
-						<li>Low traffic websites</li>
+						<li>Desktop &amp; mobile applications</li>
+						<li>Small to medium traffic websites</li>
 						<li>Ad hoc command line data analysis</li>
-						<li>Stand-in for enterprise RDBMS during testing or demos</li>
-					</ul>
-					<br><br>
-					<h4>What's it not good for?</h4>
-					<ul>
-						<li>Client/Server applications</li>
-						<li>High volume websites</li>
-						<li>Very large datasets</li>
-						<li>High concurrency (simultaneous readers)</li>
+						<li>Testing - due to its ubiquitous presence, there are many ways to start a simple MySQL server without installing it on your work/personal machine, including <a href="http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_CreateInstance.html">AWS</a> and <a href="https://www.digitalocean.com/community/tutorials/a-basic-mysql-tutorial">DigitalOcean</a>.</li>
 					</ul>
 				</section>
-
 				<section>
-					<h3>Installing SQLite3</h3>
-					<h4>Windows</h4>
+					<h3>When to avoid MySQL</h3>
 					<ul>
-						<li><a href="http://git-scm.com/downloads">Install Git</a> (Windows only)</li>
-						<ul><li>We will be using Git Bash instead of the Command Line</li></ul>
-						<li><a href="http://www.sqlite.org/download.html">Install SQLite3</a></li>
-						<li>Download “sqlite-shell” and “sqlite-dll” archive files</li>
-						<li>Unpack sqlite-dll files and move them to C:\WINDOWS\system32 folder</li>
-						<li>Launch sqlite-shell</li>
+						<li>When concurrent database sessions are both modifying and querying the database. In these situations you will want to look at solutions with multi-version concurrency control, such as PostgreSQL, Oracle, and Microsoft SQL Server.</li>
+						<li>When the existing architecture demands a different RDBMS. e.g.:
+							<ul>
+								<li>SQL server has support for native .NET data types whereas MySQL does not - so this situation would require the use of SQL server instead of MySQL.</li>
+								<li>MySQL does not support common table expressions (CTEs). A CTE is a temporary table that is the result of a SQL statement, but it is self-referencing. If you are using CTEs, another RDBMS is needed e.g. PosgreSQL (the WITH statement).</li>
+							</ul></li>
 					</ul>
-				</section>
-
-				<section>
-					<h3>Installing SQLite3</h3>
-					<h4>Mac</h4>
-					<p>Open Terminal and see if you have Homebrew installed</p>
-					<pre><code contenteditable class="JavaScript">$ brew -v
-Homebrew 0.9.5</code></pre>
-					<p>If you do not see "Homebrew" and a version number, copy and paste this line into Terminal:</p>
-					<pre><code contenteditable class="JavaScript">ruby -e "$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)"</code></pre>
-					<p>Install SQLite3 using Homebrew</p>
-					<pre><code contenteditable class="JavaScript">brew install sqlite3</code></pre>
 				</section>
 
 				<section>
           <h3>Intro to Terminal</h3>
-          <p>Mac & Linux users: Open <strong>Terminal</strong></p>
-          <p>Windows users: Open <strong>Git-Bash</strong></p>
-          <br >
+          <p>Mac &amp; Linux users: Open <strong>Terminal</strong></p>
+          <p>Windows users: Open <a href="https://git-for-windows.github.io/"><strong>Git-Bash</strong></a></p>
+          <br />
           <p>We will not be using Windows "cmd" program, as it uses a different syntax than *NIX systems.</p>
         </section>
 
@@ -204,61 +172,68 @@ Homebrew 0.9.5</code></pre>
               <td>man [command]</td>
               <td>displays the manual for command</td>
             </tr>
+						<tr>
+							<td>whoami</td>
+							<td>displays the currently logged in user</td>
+						</tr>
           </table>
         </section>
 
 				<section>
-					<h3>Let's Develop It!</h3>
-        	<p>Working in the terminal, create a directory called gdi_db in the location of your choosing (Desktop? Documents? Somewhere you'll be able to find it again!).</p>
+					<h3>Accessing Student Workarea</h3>
+        	<p><ol>
+						<li>SSH into the student environment with the password 'p@ssw0rd':<br /><pre><code>ssh studentN@IPAddress</pre></code></li>
+						<li>Get the ID of your docker container:<br /><pre><code>docker ps | grep $(whoami)</pre></code></li>
+						<li>Go into your docker container:<br /><pre><code>docker exec -it ${container_id} /bin/bash</pre></code><br />e.g.: <pre><code>docker exec -it 9fb9f2121db6 /bin/bash</pre></code></li>
+						<li>Start MySQL by simply running the 'mysql' command</li>
+					</ol></p>
         </section>
 
-
 				<section>
-					<h3>Let's Develop It! (continued)</h3>
-					<h4>Testing our SQLite3 Installation (Mac)</h4>
-					<p>Run "sqlite3" in Terminal</p>
-					<pre><code>$ sqlite3
-SQLite version 3.7.8 2011-09-19 14:49:19
-Enter ".help" for instructions
-Enter SQL statements terminated with a ";"
-sqlite></pre></code>
-					<p>If successful, you will see the version info and the sqlite prompt</p>
-					<h4>Testing our SQLite3 Installation (Windows)</h4>
-					<p>Open sqlite-shell.</p>
-				</section>
-
-				<section>
-					<h3>SQLite3 Help</h3>
-					<p>Enter .help for instructions</p>
-					<p>We will go through many of these. For now, note that you can use .exit or .quit to exit the Sqlite prompt</p>
+					<h3>Getting Started with the Student Environment</h3>
+					<p><ul>
+						<li>For generic help enter 'HELP;' at the prompt.</li>
+						<li>For help with a concept or command, enter the command or a search string. e.g. "HELP 'contents';" or "HELP 'create table';"<br />-> Note the use of the single quotes around the search string.</li>
+						<li>To exit the MySQL session you can use either 'exit', 'quit', or '\q'.</li>
+						<li>To exit the Docker container, you can use control+D or 'exit'.</li>
+						<li>To logout of the student environment, you can use control+D, 'exit', or 'logout'.</li>
+					</ul></p>
 				</section>
 
 				<section>
 					<h3>The Chinook Database</h3>
-					<ul>
-						<li><a href="http://chinookdatabase.codeplex.com/">Download the Chinook Database files</a></li>
-						<li>Open source sample database</li>
-						<li>Available for many popular RDBMS, including SQL Server, Oracle, MySQL, PostgreSQL, and SQLite</li>
-						<li>Data model for a digital media store</li>
-					</ul>
+					<p align="left">For this class, we will be using the <a href="http://chinookdatabase.codeplex.com/">Chinook Database</a>, which is:
+						<ul>
+  						<li>An open source sample database</li>
+  						<li>Available for many popular RDBMS, including SQL Server, Oracle, MySQL, PostgreSQL, and SQLite</li>
+  						<li>Data model for a digital media store</li>
+						</ul>
+					</p>
 				</section>
 
 				<section>
-					<h3>The Chinook Database</h3>
+					<h3>The Chinook Database Architecture</h3>
 					<img src="images/chinookschema.png">
 				</section>
 
 				<section>
-					<h3>Installing the Chinook Database</h3>
-					<ul>
-						<li>Move the zipped file you downloaded to the folder you just created</li>
-						<li>Unzip ChinookDatabase1.4_CompleteVersion.zip</li>
-						<li>Execute the following command to open the Chinook_Sqlite.sqlite database</li>
-					</ul>
-					<h4>Mac:</h4>
-					<pre><code contenteditable class="JavaScript">sqlite3 Chinook_Sqlite.sqlite</code></pre>
-					<h4>Windows:</h4>
-					<pre><code contenteditable class="JavaScript">.open C:/Downloads/ChinookDatabase1.4_CompleteVersion/Chinook_Sqlite.sqlite</code></pre>
+					<h3>Selecting a database</h3>
+					<p>View the databases by using 'SHOW DATABASES;':<pre><code>mysql> SHOW DATABASES;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| Chinook            |
+| mysql              |
+| performance_schema |
+| test               |
++--------------------+
+5 rows in set (0.01 sec)</pre></code></p>
+					<p>Select the 'Chinook' database with 'USE Chinook;':<pre><code>mysql> USE Chinook;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed</pre></code></p>
 				</section>
 
 				<section>
@@ -289,58 +264,50 @@ sqlite></pre></code>
 				<section>
 					<h3>View Tables</h3>
 					<p>Let's check out the tables included in the Chinook database:</p>
-					<pre><code contenteditable class="JavaScript">sqlite> .tables
-Album          Employee       InvoiceLine    PlaylistTrack
-Artist         Genre          MediaType      Track
-Customer       Invoice        Playlist
-sqlite>
+					<pre><code>mysql> SHOW TABLES;
++-------------------+
+| Tables_in_Chinook |
++-------------------+
+| Album             |
+| Artist            |
+| Customer          |
+| Employee          |
+| Genre             |
+| Invoice           |
+| InvoiceLine       |
+| MediaType         |
+| Playlist          |
+| PlaylistTrack     |
+| Track             |
++-------------------+
+11 rows in set (0.00 sec)
 </code></pre>
 				</section>
 
 				<section>
 					<h3>Table Schemas</h3>
-					<p>We can also check out the schema for the tables.</p>
-					<pre><code contenteditable class="JavaScript">sqlite> .schema Artist
-CREATE TABLE [Artist]
-(
-    [ArtistId] INTEGER  NOT NULL,
-    [Name] NVARCHAR(120),
-    CONSTRAINT [PK_Artist] PRIMARY KEY  ([ArtistId])
-);
-CREATE UNIQUE INDEX [IPK_Artist] ON [Artist]([ArtistId]);
+					<p>We can also check out the schema for the tables using 'SHOW CREATE TABLE' or 'DESCRIBE'.</p>
+					<pre><code>mysql> SHOW CREATE TABLE Artist;
++--------+------------------------------------------------+
+| Table  | Create Table                                   |
++--------+------------------------------------------------+
+| Artist | CREATE TABLE `Artist` (
+            `ArtistId` int(11) NOT NULL,
+            `Name` varchar(120) CHARACTER SET utf8 DEFAULT NULL,
+            PRIMARY KEY (`ArtistId`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 |
++--------+------------------------------------------------+
+1 row in set (0.00 sec)
 </code></pre>
+          <pre><code>mysql> DESCRIBE Artist;
++----------+--------------+------+-----+---------+-------+
+| Field    | Type         | Null | Key | Default | Extra |
++----------+--------------+------+-----+---------+-------+
+| ArtistId | int(11)      | NO   | PRI | NULL    |       |
+| Name     | varchar(120) | YES  |     | NULL    |       |
++----------+--------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)</pre></code>
 					<p>What are the columns in the Artist table?</p>
-				</section>
-
-				<section>
-					<h3>GUI Tools</h3>
-						<p>Many GUI tools exist for SQLite.<p>
-						<p>Let's download <a href="https://addons.mozilla.org/en-US/firefox/addon/sqlite-manager/">SQLite Manager</a>, an add-on for Firefox</p>
-						<p>(First install Firefox, if you do not have it already.)</p>
-						<img src="images/SQLiteManager.png"/>
-				</section>
-
-				<section>
-					<h3>Chinook Database in SQLite Manager</h3>
-					<ul>
-						<li>Open SQLite Manager in Firefox Tools</li>
-						<li>Database -> Connect Database</li>
-						<li>Navigate to Chinook_Sqlite.sqlite in your directory</li>
-						<li>Click "Open"</li>
-						<img src="images/SQLiteManagerPlugin.png"/>
-					</ul>
-				</section>
-
-				<section>
-					<h3>Let's Develop It!</h3>
-					<p>Spend a few minutes exploring the SQLite Manager<p>
-					<ul>
-						<li>Pair up with your neighbor and discuss what you find.</li>
-						<li>View a few tables.</li>
-						<li>What do you find in the Structure tab? What are some different data types you can find?</li>
-						<li>How about the Browse and Search tab?</li>
-						<li>We can ignore Execute SQL and DB Settings for now. Just focus on what we see in the data.</li>
-					</ul>
 				</section>
 
 				<section>
@@ -350,12 +317,16 @@ CREATE UNIQUE INDEX [IPK_Artist] ON [Artist]([ArtistId]);
 						<li>The output from a SELECT statement is always a grid of rows and columns.</li>
 						<li>The most simple SELECT statement retrieves all values from a single table</li>
 					</ul>
-					<pre><code contenteditable class="JavaScript">sqlite> SELECT * FROM Album;
-1|For Those About To Rock We Salute You|1
-2|Balls to the Wall|2
-3|Restless and Wild|2
-4|Let There Be Rock|1
-5|Big Ones|3
+					<pre><code>mysql> SELECT * FROM Album;
++---------+----------------------------------------+----------+
+| AlbumId | Title                                  | ArtistId |
++---------+----------------------------------------+----------+
+|       1 | For Those About To Rock We Salute You  |        1 |
+|       2 | Balls to the Wall                      |        2 |
+|       3 | Restless and Wild                      |        2 |
+|       4 | Let There Be Rock                      |        1 |
+|       5 | Big Ones                               |        3 |
+...
 </code></pre>
 					<p>This will return all of the results from the table, which could be expensive.</p>
 				</section>
@@ -363,15 +334,15 @@ CREATE UNIQUE INDEX [IPK_Artist] ON [Artist]([ArtistId]);
 				<section>
 					<h3>SELECT .. WHERE</h3>
 					<p>You can have only a subset of rows returned by using the WHERE clause</p>
-					<pre><code contenteditable class="JavaScript">sqlite> SELECT *
-   ...> FROM Customer
-   ...> WHERE FirstName = "Mark";
-14|Mark|Philips|Telus|8210 111 ST NW|Edmonton|AB|Canada|T6G 2C7|+1 (780) 434-4554|+1 (780) 434-5565|mphilips12@shaw.ca|5
-55|Mark|Taylor||421 Bourke Street|Sidney|NSW|Australia|2010|+61 (02) 9332 3633||mark.taylor@yahoo.au|4
-sqlite>
+					<pre><code>mysql> SELECT * FROM Customer WHERE FirstName = "Mark";
++------------+-----------+----------+---------+-...+
+| CustomerId | FirstName | LastName | Company | ...|
++------------+-----------+----------+---------+-...+
+|         14 | Mark      | Philips  | Telus   | ...|
+|         55 | Mark      | Taylor   | NULL    | ...|
++------------+-----------+----------+---------+-...+
+2 rows in set (0.01 sec)
 </code></pre>
-					<p>Alternatively, the SELECT .. WHERE statement can be made on one line:</p>
-					<pre><code contenteditable class="JavaScript">SELECT * FROM Customer WHERE FirstName = "Mark";</code></pre>
 				</section>
 
 				<section>
@@ -421,39 +392,14 @@ sqlite>
 				</section>
 
 				<section>
-					<h3>Not Equal</h3>
-					<pre><code contenteditable class="JavaScript">SELECT * FROM Customer WHERE FirstName <> "Mark";
-</code></pre>
-				</section>
-
-				<section>
-					<h3>Greater Than</h3>
-					<pre><code contenteditable class="JavaScript">SELECT * FROM Employee WHERE BirthDate > "1970-01-01";
-</code></pre>
-				</section>
-
-				<section>
-					<h3>Less Than</h3>
-					<pre><code contenteditable class="JavaScript">SELECT * FROM Employee WHERE BirthDate < "1970-01-01";
-</code></pre>
-				</section>
-
-				<section>
-					<h3>BETWEEN</h3>
-					<pre><code contenteditable class="JavaScript">SELECT * FROM Employee WHERE BirthDate BETWEEN "1965-01-01" AND "1971-01-01";
-</code></pre>
-				</section>
-
-				<section>
-					<h3>LIKE</h3>
-					<pre><code contenteditable class="JavaScript">SELECT * FROM Track WHERE Name LIKE "%Love%";
-</code></pre>
-				</section>
-
-				<section>
-					<h3>IN</h3>
-					<pre><code contenteditable class="JavaScript">SELECT * FROM Track WHERE MediaTypeId IN (1,2);
-</code></pre>
+					<h3>Some Practice Statements</h3>
+					<p>What do each of these return?</p>
+					<pre><code>SELECT * FROM Customer WHERE FirstName <> "Mark";</code></pre>
+					<pre><code>SELECT * FROM Employee WHERE BirthDate > "1970-01-01";</code></pre>
+					<pre><code>SELECT * FROM Employee WHERE BirthDate < "1970-01-01";</code></pre>
+					<pre><code>SELECT * FROM Employee WHERE BirthDate BETWEEN "1965-01-01" AND "1971-01-01";</code></pre>
+					<pre><code>SELECT * FROM Track WHERE Name LIKE "%Love%";</code></pre>
+					<pre><code>SELECT * FROM Track WHERE MediaTypeId IN (1,2);</code></pre>
 				</section>
 
 				<section>
@@ -466,11 +412,12 @@ sqlite>
 				</section>
 
 				<section>
-						<h3>Resources</h3>
-								<ul>
-										<li><a href="http://www.sqlite.org/whentouse.html">When to Use SQLite</a> - A list of good uses for SQLite, as well as situations where another RDMBS would be better.</li>
-										<li>More about <a href="http://www.tutorialspoint.com/sqlite/sqlite_where_clause.htm">SQLite WHERE clauses</a></li>
-							</ul>
+					<h3>Resources</h3>
+					<ul>
+						<li><a href="https://www.digitalocean.com/community/tutorials/sqlite-vs-mysql-vs-postgresql-a-comparison-of-relational-database-management-systems"><strong>SQLite vs MySQL vs PostgreSQL: A Comparison Of Relational Database Management Systems</strong></a> - an article by <a href="https://www.digitalocean.com/">DigitalOcean</a> that compares some of the basics of these systems.</li>
+						<li><a href="https://www.digitalocean.com/community/tutorials/a-basic-mysql-tutorial"><strong>A Basic MySQL Tutorial</strong></a> - How to setup a simple MySQL server using DigitalOcean.
+						<li><a href="http://www.sqlite.org/whentouse.html"><strong>When to Use SQLite</strong></a> - Although we aren't using it for this class, here is more information about SQLite.</li>
+					</ul>
 				</section>
 
         <section>
