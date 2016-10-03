@@ -183,8 +183,7 @@
 					<h3>Accessing Student Workarea</h3>
         	<p><ol>
 						<li>SSH into the student environment with the password 'p@ssw0rd':<br /><pre><code>ssh studentN@IPAddress</pre></code></li>
-						<li>Get the ID of your docker container:<br /><pre><code>docker ps | grep $(whoami)</pre></code></li>
-						<li>Go into your docker container:<br /><pre><code>docker exec -it ${container_id} /bin/bash</pre></code><br />e.g.: <pre><code>docker exec -it 9fb9f2121db6 /bin/bash</pre></code></li>
+						<li>Go into your docker container:<br /><pre><code>docker exec -it chinook-mysql-$(whoami) /bin/bash</pre></code></li>
 						<li>Start MySQL by simply running the 'mysql' command</li>
 					</ol></p>
         </section>
