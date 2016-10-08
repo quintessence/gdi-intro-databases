@@ -46,7 +46,7 @@
 				<section>
 					<h3>Welcome!</h3>
 					<div class = "left-align">
-					<p>Girl Develop It is here to provide affordable and accessible programs to learn software through mentorship and hands-on instruction.</p>
+					<p align="left">Girl Develop It is here to provide affordable and accessible programs to learn software through mentorship and hands-on instruction.</p>
 					<p class ="green">Some "rules"</p>
 					<ul>
 						<li>We are here for you!</li>
@@ -59,7 +59,7 @@
 
 		    <section>
 					<h3>Overview</h3>
-					<p>Today, we will learn:</p>
+					<p align="left">Today, we will learn:</p>
 					<ul>
 						<li>How to create a database</li>
 						<li>How to create, alter and drop tables</li>
@@ -69,316 +69,571 @@
         </section>
 
 				<section>
-					<h3>Create Database</h3>
-					<p>From Windows Command Line Tool:</p>
-					<pre><code contenteditable class="JavaScript">sqlite> .open test.db
-</code></pre>
-					<p>From Mac Terminal:</p>
-					<pre><code contenteditable class="JavaScript">$ sqlite3 test.db
-</code></pre>
-					<p>In each case, SQLite3 attempts to open a database called "test.db", which does not exists. Therefore, it is created.</p>
+					<h3>Reminder: Accessing Student Workarea</h3>
+        	<p align="left"><ol>
+						<li>SSH into the student environment with the password 'p@ssw0rd':<br /><pre><code>ssh studentN@IPAddress</pre></code></li>
+						<li>Go into your docker container:<br /><pre><code>docker exec -it chinook-mysql-$(whoami) /bin/bash</pre></code></li>
+						<li>Start MySQL by simply running the 'mysql' command</li>
+					</ol></p>
+        </section>
+
+				<section>
+					<h3>Create and Use Your Own Database</h3>
+					<p align="left">The CREATE statement can be used to create both databases and tables. Let's setup our own database and use it.</p>
+					<p align="left"><pre><code>mysql> CREATE DATABASE mydatabase;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> SHOW DATABASES;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| Chinook            |
+| mydatabase         |
+| mysql              |
+| performance_schema |
+| test               |
++--------------------+
+6 rows in set (0.01 sec)
+
+mysql> USE mydatabase;
+Database changed</code></pre></p>
 				</section>
 
 				<section>
-					<h3>Create Tables</h3>
-					<p>The CREATE statement is used to create tables. It is also used to create indexes, views and triggers.</p>
-					<p>To create a table, we give a name to a table and to its columns. Each column can have one of these data types:</p>
-					<ul>
-						<li>NULL - The value is a NULL value</li>
-						<li>INTEGER - a signed integer</li>
-						<li>REAL - a floating point value</li>
-						<li>TEXT - a text string</li>
-						<li>BLOB - a blob of data</li>
-					</ul>
-					<pre><code contenteditable class="JavaScript">sqlite> CREATE TABLE Testing(Id INTEGER);
-sqlite> .schema Testing
-sqlite> CREATE TABLE Testing(Id INTEGER);
-</code></pre>
+					<h3>Introductory Data Types</h3>
+					<p align="left" style="font-size: 25px">Here are a few introductory data types to get started. Keep in mind this is not an exhaustive list - so you may encounter different data types "in the wild".</p>
+					<table style="font-size: 25px; line-height: 1.4em;">
+						<tr>
+							<td>Integers</td>
+							<td>Depending on the range of values needed, can specify TINYINT, SMALLINT, MEDIUMINT, INT, or BIGINT.</td>
+						</tr>
+						<tr>
+							<td>Decimals</td>
+							<td>Can use FLOAT for small floating point (decimal) values or DOUBLE for large floating point values. There is also the DECIMAL type, which stores DOUBLE as a string allowing for fixed decimal points.</td>
+						</tr>
+						<tr>
+							<td>Text</td>
+							<td>A text string, depending on length needed can use TINYTEXT, MEDIUMTEXT, TEXT, or LONGTEXT.</td>
+						</tr>
+						<tr>
+							<td>Binary Large Objects</td>
+							<td>Depending on the size needed, can use BLOB, MEDIUMBLOB, or LONGBLOB. Note that there is neither a TINYBLOB nor SMALLBLOB type.</td>
+						</tr>
+    				<tr>
+    					<td>Time</td>
+    					<td>Time types are somewhat self explanatory and include DATE, TIME, DATETIME, TIMESTAMP, and YEAR.</td>
+    				</tr>
+					</table>
 				</section>
 
 				<section>
-					<h3>Drop Tables</h3>
-					<p>The DROP statement is used to delete a table from a database.</p>
-					<pre><code contenteditable class="JavaScript">sqlite> DROP TABLE Testing;
-sqlite> .tables
+					<h3>Creating a Table and Inserting Data</h3>
+					<p align="left">Now we will use the CREATE statement to create a simple table:</p>
+					<pre><code>mysql> CREATE TABLE mytable (id INT, name TEXT);
+Query OK, 0 rows affected (0.01 sec)
 </code></pre>
+          <p align="left">In order to insert data we will use a couple INSERT statements:</p>
+					<pre><code>mysql> INSERT INTO mytable (id, name) VALUES (1, 'Luna Lovegood');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO mytable (id, name) VALUES (2, 'Hermione Granger');
+Query OK, 1 row affected (0.01 sec)</code></pre>
+          <p align="left">Using what we learned earlier, how would you view all the data you just inserted into your table?</p>
+				</section>
+
+				<section>
+					<h3>Drop Your New Table</h3>
+					<p align="left">The DROP statement is used to delete a table from a database:</p>
+					<pre><code>mysql> SHOW TABLES;
++----------------------+
+| Tables_in_mydatabase |
++----------------------+
+| mytable              |
++----------------------+
+1 row in set (0.00 sec)
+
+mysql> DROP TABLE mytable;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> SHOW TABLES;
+Empty set (0.00 sec)</code></pre>
 					<a href="http://xkcd.com/327/"><img src="images/exploits_of_a_mom.png"/></a>
+					<small>XKCD: Always relevant.</small>
 				</section>
 
 				<section>
-					<h3>Drop Tables</h3>
-					<p>If you are trying to drop a table that does not exist, you will get an error. We can avoid this with the "IF EXISTS" clause.</p>
-					<pre><code contenteditable class="JavaScript">sqlite> DROP TABLE IF EXISTS Testing;
-sqlite> .tables
-</code></pre>
+					<h3>Drop Non-Existent Table</h3>
+					<p align="left">If you are trying to drop a table that does not exist, you will get an error. We can avoid this with the "IF EXISTS" clause. So now let's try dropping our already dropped table again:</p>
+					<pre><code>mysql> DROP TABLE mytable;
+ERROR 1051 (42S02): Unknown table 'mytable'
+
+mysql> DROP TABLE IF EXISTS mytable;
+Query OK, 0 rows affected, 1 warning (0.01 sec)</code></pre>
 				</section>
 
 				<section>
-					<h3>Alter Tables</h3>
-					<ul>
-						<li>Rename a table</li>
-						<li>Add a column to a table</li>
-						<li>In SQLite, ALTER cannot:
-							<ul>
-								<li>Rename a column</li>
-								<li>Remove a column</li>
-								<li>Add or remove constraints from a table</li>
-							</ul></li>
-					</ul>
-					<pre><code contenteditable class="JavaScript">sqlite> CREATE TABLE Names(Id INTEGER, Name TEXT);
-sqlite> .tables
-sqlite> ALTER TABLE Names RENAME TO NamesOfFriends;
-sqlite> .schema NamesOfFriends
-sqlite> ALTER TABLE NamesOfFriends ADD COLUMN Email TEXT;
-sqlite> .schema NamesOfFriends
-</code></pre>
+					<h3>Modifying Tables</h3>
+					<p align="left">A table can be changed by:
+  					<ul>
+  						<li>renaming the table itself</li>
+  						<li>adding or removing columns</li>
+							<li>renaming columns or changing their data type</li>
+  					</ul>
+  				</p>
+					<pre><code>mysql> CREATE TABLE names (id INT, name TEXT);
+mysql> SHOW TABLES;
+mysql> RENAME TABLE names TO contacts;
+mysql> DESCRIBE contacts;
+mysql> SHOW CREATE TABLE contacts;
+mysql> ALTER TABLE contacts ADD email TEXT;
+mysql> ALTER TABLE contacts ADD phone TEXT;
+mysql> DESCRIBE contacts;
+mysql> ALTER TABLE contacts CHANGE phone cell TEXT;
+mysql> DESCRIBE contacts;
+mysql> ALTER TABLE contacts DROP email;
+mysql> DESCRIBE contacts;</code></pre>
 				</section>
 
 				<section>
-					<h3>What if Alter isn't good enough?</h3>
-					<p>Say we really do need to rename or remove a column. What do we do?</p>
-					<ul>
-						<li>Rename the old table</li>
-						<li>Create the new table, based on the old table but with the updated column</li>
-						<li>Copy the contents across from the original table</li>
-						<li>Drop the old table</li>
-					</ul>
-					<p>The .dump Table command in SQLite will output the instructions for recreating a table and its contents.</p>
-					<pre><code contenteditable class="JavaScript">sqlite> .dump Media
-</code></pre>
+					<h3>Create a new table from an existing table</h3>
+					<p align="left">Let's say that we need to create a new table using the
+					data from our existing table, either in part or in whole.<br />
+					To showcase this, we'll start by INSERTing a couple of entries into our existing table before
+				  creating two new tables.</p>
+					<pre><code>mysql> INSERT INTO contacts (id, name, cell) VALUES \
+(1, 'Kara Thrace', '09-03-13');
+mysql> INSERT INTO contacts (id, name, cell) VALUES \
+(2, 'Natalie Faust', '09-10-27');
+mysql> SELECT * FROM contacts;
+mysql> CREATE TABLE myfriends AS SELECT * FROM contacts;
+mysql> CREATE TABLE namesonly AS SELECT name FROM contacts;
+mysql> SELECT * FROM myfriends;
+mysql> SELECT * FROM namesonly;</code></pre>
+        <p align="left">The SELECT statement the new table is created from can be
+					as simple or complex as you like! Go ahead and try creating a couple more
+					tables with different SELECT statements.</p>
 				</section>
 
 				<section>
-					<h3>Primary and Foreign Keys</h3>
-					<pre><code contenteditable class="JavaScript">sqlite> .schema InvoiceLine
-CREATE TABLE [InvoiceLine]
-(
-    [InvoiceLineId] INTEGER  NOT NULL,
-    [InvoiceId] INTEGER  NOT NULL,
-    [TrackId] INTEGER  NOT NULL,
-    [UnitPrice] NUMERIC(10,2)  NOT NULL,
-    [Quantity] INTEGER  NOT NULL,
-    CONSTRAINT [PK_InvoiceLine] PRIMARY KEY  ([InvoiceLineId]),
-    FOREIGN KEY ([InvoiceId]) REFERENCES [Invoice] ([InvoiceId])
-		ON DELETE NO ACTION ON UPDATE NO ACTION,
-    FOREIGN KEY ([TrackId]) REFERENCES [Track] ([TrackId])
-		ON DELETE NO ACTION ON UPDATE NO ACTION
-);
-</code></pre>
-<p>We will ignore indexes in this class and discuss them next week.</p>
+					<h3>Database Keys</h3>
+					<p align="left">Keys are one or more values that, all together, are unique ways of identifying data in your table.<br />
+					A quick example could be an employer database - if the given and surnames were both keys, then together they could differentiate between 'John Smith' and 'John Doe'.<br />
+					Take a look at the keys for this table in the Chinook database:</p>
+					<pre><code>mysql> DESCRIBE InvoiceLine;
++---------------+---------------+------+-----+---------+-------+
+| Field         | Type          | Null | Key | Default | Extra |
++---------------+---------------+------+-----+---------+-------+
+| InvoiceLineId | int(11)       | NO   | PRI | NULL    |       |
+| InvoiceId     | int(11)       | NO   | MUL | NULL    |       |
+| TrackId       | int(11)       | NO   | MUL | NULL    |       |
+| UnitPrice     | decimal(10,2) | NO   |     | NULL    |       |
+| Quantity      | int(11)       | NO   |     | NULL    |       |
++---------------+---------------+------+-----+---------+-------+
+5 rows in set (0.01 sec)</code></pre>
+				</section>
+
+				<section>
+					<h3>PRI, UNI, and MUL Keys</h3>
+					<p align="left">As you can see, the InvoiceLine table has two different
+						types of keys. Here are the different types of keys that MySQL will
+						indicate in the Key column:<br />
+						<ul>
+							<li><strong>PRI:</strong> (Primary) If a key is PRI, then it is a
+								primary key either as a solitary key column or as a part of a
+								multi-column (compound) key</li>
+							<li><strong>UNI:</strong> (Unique) If Key is UNI, the column is the
+								first column of a unique-valued index that cannot contain NULL values.</li>
+							<li><strong>MUL:</strong> (Multiple) If Key is MUL, multiple occurrences
+								of a given value are permitted within the column. The column is the
+								first column of a nonunique index or a unique-valued index that can
+								contain NULL values.</li>
+						</ul>
+					</p>
+				</section>
+
+				<section>
+					<h3>Key Terms</h3>
+					<p align="left">Here are a few types of keys that you need to know:<br />
+						<ul>
+							<li><strong>simple key:</strong> when a single field (column) can be used to identify a record. Using our contacts table from before, if all values in the id column were unique it could be a simple key.</li>
+							<li><strong>compound key:</strong> when more than one key is used to identify data. Using our 'John Smith' and 'John Doe' example, if the given and surname columns were both keys they would make a compound key.</li>
+							<li><strong>foreign key:</strong> when a key from a different table is used as a key in the current table in order to link the data between the tables.</li>
+						</ul>
+					</p>
 				</section>
 
 				<section>
 					<h3>Constraints</h3>
-					<p>Constraints are placed on columns. They limit the data that can be inserted into tables.<p>
-					<ul>
-						<li>NOT NULL</li>
-						<li>UNIQUE</li>
-						<li>PRIMARY KEY</li>
-						<li>FOREIGN KEY</li>
-						<li>CHECK</li>
-						<li>DEFAULT</li>
-					</ul>
+					<p align="left">Constraints are used to limit the data that can be inserted into columns:
+  					<ul>
+  						<li>NOT NULL</li>
+  						<li>UNIQUE</li>
+  						<li>PRIMARY KEY</li>
+							<li>FOREIGN KEY</li>
+  						<li>CHECK</li>
+  						<li>DEFAULT</li>
+  					</ul>
+  				</p>
 				</section>
 
 				<section>
 					<h3>NOT NULL CONSTRAINT</h3>
-					<p>A column with a NOT NULL constraint can't have NULL values.</p>
-					<pre><code contenteditable class="JavaScript">sqlite> CREATE TABLE People(Id INTEGER, LastName TEXT NOT NULL,
-	...> FirstName TEXT NOT NULL, City TEXT);
-sqlite> INSERT INTO People VALUES(1, 'Hanks', 'Robert', 'New York');
-sqlite> INSERT INTO People VALUES(2, NULL, 'Marianne', 'Chicago');
-Error: People.LastName may not be NULL
-</code></pre>
+					<p align="left">A NOT NULL column cannot have NULL values.<br />
+					Let's create a sample table in our database to showcase the different constraints:</p>
+					<pre><code>mysql> USE mydatabase;
+Database changed
+
+mysql> CREATE TABLE sample (id INT NOT NULL, givenname TEXT,
+surname TEXT);
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> INSERT INTO sample VALUES (1, 'John', 'Doe');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO sample VALUES (2, 'John', 'Smith');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO sample VALUES (NULL, 'Jane', 'Doe');
+ERROR 1048 (23000): Column 'id' cannot be null</code></pre>
 				</section>
 
 				<section>
 					<h3>UNIQUE Constraint</h3>
-					<p>The UNIQUE constraint ensures that all data in a column are unique.</p>
-					<pre><code contenteditable class="JavaScript">sqlite> CREATE TABLE Brands(Id INTEGER, BrandName TEXT UNIQUE);
-sqlite> INSERT INTO Brands VALUES(1, 'Coca Cola');
-sqlite> INSERT INTO Brands VALUES(2, 'Pepsi');
-sqlite> INSERT INTO Brands VALUES(3, 'Pepsi');
-Error: column BrandName is not unique
-</code></pre>
-				<p>Note: the PRIMARY KEY constraint automatically has a UNIQUE constraint defined on it.</p>
+					<p align="left">The UNIQUE constraint ensures that all data in a column are unique.</p>
+					<pre><code>mysql> CREATE TABLE sandwiches (id INT UNIQUE, name TEXT);
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> INSERT INTO sandwiches (id, name) VALUES (1, 'smorrebrod');
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO sandwiches (id, name) VALUES (1, 'pljeskavica');
+ERROR 1062 (23000): Duplicate entry '1' for key 'id'
+
+mysql> INSERT INTO sandwiches (id, name) VALUES (2, 'pljeskavica');
+Query OK, 1 row affected (0.00 sec)</code></pre>
+				<p align="left"><strong>Try this:</strong> What happens if you try to make
+					the sandwich name UNIQUE instead of the id?</p>
+				</section>
+
+				<section>
+					<h3>Limits of Unique</h3>
+					<p align="left">What happened when you tried to make your sandwich name unique? MySQL threw an error, i.e.:</p>
+					<pre><code>mysql> CREATE TABLE sandwiches (id INT, name TEXT UNIQUE);
+ERROR 1170 (42000): BLOB/TEXT column 'name' used in key specification
+without a key length</code></pre>
+          <p align="left">What does this mean? Simply put, since string fields
+						like TEXT have varying lengths, you need to tell the database
+						engine how many characters in the string it needs to guarantee uniqueness.
+						Instead of using TEXT, try VARCHAR:</p>
+						<pre><code>mysql> CREATE TABLE sandwiches (id INT, name VARCHAR(20) UNIQUE);
+Query OK, 0 rows affected (0.01 sec)</code></pre>
+           <p align="left">VARCHAR(20) tells the database engine that the column
+						 is a string field that will contain at most 20 characters, so the data
+					   will need to be unqiue for those 20 characters.</p>
 				</section>
 
 				<section>
 					<h3>Primary Key Constraint</h3>
 					<ul>
-						<li>Uniquely identifies each row in a database table.</li>
-						<li>There can be additional UNIQUE columns, but only one PRIMARY KEY.</li>
-						<li>We use primary keys as unique IDs to refer to table rows.</li>
-						<li>Primary keys <em>become</em> foreign keys when creating relations among tables.</li>
+						<li>Employs the UNIQUE contraint to <em>uniquely</em> identify each row in a database table.</li>
+						<li>A table can be multiple UNIQUE columns, but only one PRIMARY KEY.</li>
+						<li>PRIMARY KEYs are unique IDs to refer to table rows.</li>
+						<li>PRIMARY KEYs <em>become</em> FOREIGN KEYs when creating relations among tables.</li>
 					</ul>
-					<p><em>Note: Due to an oversight in SQLite, primary keys can be NULL in SQLite. This is not true for other relational databases.</em></p>
+					<pre><code>mysql> CREATE TABLE sodapop (name VARCHAR(20), qty INT, \
+PRIMARY KEY (name));
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> DESCRIBE sodapop;
++-------+-------------+------+-----+---------+-------+
+| Field | Type        | Null | Key | Default | Extra |
++-------+-------------+------+-----+---------+-------+
+| name  | varchar(20) | NO   | PRI |         |       |
+| qty   | int(11)     | YES  |     | NULL    |       |
++-------+-------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)</code></pre>
 				</section>
 
 				<section>
 					<h3>Foreign Key Constraint</h3>
-					<p>A FOREIGN KEY in one table points to a PRIMARY KEY in another table. This acts as a referential constraint between the two tables.</p>
-					<pre><code contenteditable class="JavaScript">sqlite> CREATE TABLE Authors(AuthorId INTEGER PRIMARY KEY, Name TEXT);
-sqlite> CREATE TABLE Books(BookId INTEGER PRIMARY KEY, Title TEXT, AuthorId INTEGER,
-	 ...> FOREIGN KEY(AuthorId) REFERENCES Authors(AuthorId));
-</code></pre>
-					<p>In SQLite, foreign keys are not enforced by default. Configuration is outside the scope of this class, but other databases will enforce by default.</p>
+					<p align="left">A FOREIGN KEY in one table points to a PRIMARY KEY in another table. This acts as a referential constraint between the two tables.</p>
+					<pre><code>mysql> CREATE TABLE authors (author_id INT PRIMARY KEY, name TEXT);
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> CREATE TABLE books (book_id INT PRIMARY KEY, title TEXT, \
+author_id INT, FOREIGN KEY(author_id) REFERENCES authors(author_id));
+Query OK, 0 rows affected (0.01 sec)</code></pre>
 				</section>
 
 				<section>
 					<h3>CHECK Constraint</h3>
-					<p>A CHECK clause imposes a validation on the value that is being added or updated to a column.</p>
-					<pre><code contenteditable class="JavaScript">sqlite> CREATE TABLE Orders(Id INTEGER PRIMARY KEY, OrderPrice INTEGER CHECK(OrderPrice>0), Customer TEXT);
-sqlite> INSERT INTO Orders(OrderPrice, Customer) VALUES(-10, 'Johnson');
-Error: constraint failed</code></pre>
-					<p>If we try to insert an order wtih a negative price, we get an error.</p>
+					<p align="left">A CHECK clause imposes a validation on the value that is
+						being added or updated to a column. Unfortunately, CHECK functions a
+					  little unexpectedly with MySQL:</p>
+					<pre><code>mysql> CREATE TABLE orders (id INT PRIMARY KEY, order_price INT, \
+customer TEXT, CHECK (order_price >= 0));
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> INSERT INTO Orders VALUES (1, -10, 'Doe');
+Query OK, 1 row affected (0.01 sec)</code></pre>
+					<p align="left">Wait, what happened? Well, a quick look at the
+						<a href="http://dev.mysql.com/doc/refman/5.7/en/create-table.html">MySQL Man page</a>
+						tells us the CHECK clause is parsed but ignored. Note that this limitation
+						of MySQL does not apply to all database engines.</p>
 				</section>
 
 				<section>
 					<h3>DEFAULT Constraint</h3>
-					<p>The DEFAULT constraint inserts a default value in a column if no value is provided.</p>
-					<pre><code contenteditable class="JavaScript">sqlite> CREATE TABLE Hotels(Id INTEGER PRIMARY KEY, Name TEXT,
-	...> City TEXT DEFAULT 'not available');
-sqlite> INSERT INTO Hotels(Name, City) VALUES('Kyjev', 'Bratislava');
-sqlite> INSERT INTO Hotels(Name) VALUES('Slovan');
-sqlite> .width 3 8 17
-sqlite> SELECT * FROM Hotels;
-Id   Name      City
----  --------  -----------------
-1    Kyjev     Bratislava
-2    Slovan    not available </code></pre>
-					<p>In the first statement, we provided values for both name and city. In the second statement, we only provided the hotel name.</p>
+					<p align="left">The DEFAULT constraint inserts a default value in a column if no value is provided.</p>
+					<pre><code>mysql> CREATE TABLE addressbook (name TEXT, address VARCHAR(100) \
+DEFAULT 'not provided');
+
+mysql> INSERT INTO addressbook VALUES ('sherlock', '221B baker st');
+
+mysql> INSERT INTO addressbook (name) VALUES ('watson');
+
+mysql> SELECT * FROM addressbook;
++----------+---------------+
+| name     | address       |
++----------+---------------+
+| sherlock | 221B baker st |
+| watson   | not provided  |
++----------+---------------+
+2 rows in set (0.01 sec)</code></pre>
+					<p align="left">Notice that when we provide values for all columns the
+						database engine assumes the values are provided in order without being
+					  specified, but when we only provide values for some of the columns
+					  we need to state which column(s) the value(s) are for.</p>
 				</section>
 
 				<section>
-					<h3>Let's Develop It!</h3>
-					<p>Create your own version of the Chinook database. Use the diagram below as a guide.</p>
+					<h3>Building Our Own Chinook Database</h3>
+					<p align="left">Create your own version of the Chinook database. Use the diagram below as a guide.</p>
 					<img style="width:60%" src="images/chinookschema.png">
 				</section>
 
 				<section>
-					<h3>Let's Develop It!</h3>
-					<p>Hint: Order matters due to foreign key constraints.</p>
-					<ul>
-						<li>Artist</li>
-						<li>Album</li>
-						<li>Employee</li>
-						<li>Customer</li>
-						<li>Genre</li>
-						<li>Invoice</li>
-						<li>MediaType</li>
-						<li>Track</li>
-						<li>InvoiceLine</li>
-						<li>Playlist</li>
-						<li>PlaylistTrack</li>
-					</ul>
+					<h3>Getting started</h3>
+					<p align="left">Make note of the table names.</p>
+  					<ul>
+  						<li>Artist</li>
+  						<li>Album</li>
+  						<li>Employee</li>
+  						<li>Customer</li>
+  						<li>Genre</li>
+  						<li>Invoice</li>
+  						<li>MediaType</li>
+  						<li>Track</li>
+  						<li>InvoiceLine</li>
+  						<li>Playlist</li>
+  						<li>PlaylistTrack</li>
+  					</ul>
+					<p align="left">Hint: Table creation order matters due to foreign key constraints.</p>
 				</section>
 
 				<section>
-					<h3>Solution</h3>
-					<p>The solution can be found by executing the .schema command on each table for the Chinook database.</p>
-					<p>Alternatively, you can download this <a href="create_tables.sql">list of CREATE statements.</a></p>
+					<h3>The various roads to Rome: Road 1</h3>
+					<p align="left">As with all things, there's more than one way to approach
+						this problem. One solution you might want to try is creating the new tables
+					  from the old using the CREATE ... SELECT method we used earlier. That's
+					  a bit overkill, though, as we're just creating the tables sans data. And
+					  it's a lot of manual work besides.</p>
+				</section>
+				<section>
+					<h3>The various roads to Rome: Road 2</h3>
+					<p align="left">Alternatively, you can create a list of table CREATE statements
+					  by running `SHOW CREATE TABLE table_name;` for each of the tables and
+						then manually running each one. But again, lots of manual work and every
+					  manual step leaves room for human error.</p>
+        </section>
+				<section>
+					<h3>The various roads to Rome: Road 3</h3>
+					<p align="left">So what's the quickest way to do it? Using the `mysqldump` command:</p>
+					<pre><code>prompt> mysqldump -u root --no-data Chinook > schema-no-data.sql
+prompt> cat schema-no-data.sql</code></pre>
+          <p align="left"><strong>What the flags mean:</strong><br />
+						`-u root` : the user is root<br />
+						`--no-data` : dump without data<br /><br />
+					  If you were using a setup with a password, which you would be outside
+						of a classroom environment, you'd also want to include the `-p` flag
+						which would tell `mysqldump` to prompt you for a password. Note that `-p`
+						prompts for a password and is not used as `-p {{password}}`. This keeps
+						the password out of your command history.
+					</p>
 				</section>
 
 				<section>
-					<h3>Inserting Rows</h3>
-					<p>The INSERT statement is used to insert data into tables. Let's create a new table as an example.</p>
-					<pre><code contenteditable class="JavaScript">sqlite> CREATE TABLE Books(Id INTEGER PRIMARY KEY, Title TEXT, Author TEXT, ISBN TEXT DEFAULT 'not available');
-</code></pre>
-					<p>Now, we will use the INSERT statement to create a row with all the values we want to store.</p>
-					<pre><code contenteditable class="JavaScript">sqlite> INSERT INTO Books(Id, Title, Author, ISBN)
-   ...> VALUES(1, 'War and Peace', 'Leo Tolstoy', '978-0345472403');
-</code></pre>
-					<p>We omitted the Id column, as it was defined as an INTEGER PRIMARY KEY. In SQLite, this will autoincrement for us.</p>
+					<h3>Practice with mysqldump</h3>
+						<p align="left">Try dumping the database using these flags and look
+							at the different output files. If you don't keep the file names used here,
+						  make sure to keep your file names unique - any reused file names will
+						  result in your file being overwritten.</p>
+						<pre><code>prompt> mysqldump -u root Chinook Genre > schema-table-with-data.sql
+prompt> mysqldump -u root --no-data --all-databases \
+--single-transaction > schema-all-db.sql</code></pre>
 				</section>
 
 				<section>
-					<h3>Inserting Rows</h3>
-					<p>Let's add one more:</p>
-					<pre><code contenteditable class="JavaScript">sqlite> INSERT INTO Books(Title, Author, ISBN)
-   ...> VALUES('The Brothers Karamazov', 'Fyodor Dostoyevsky', '978-0486437910');
-</code></pre>
-				  <p>And we can use a SELECT statement to view what we inserted.</p>
-					<pre><code contenteditable class="JavaScript">sqlite> SELECT * FROM Books;
-Id|Title|Author|ISBN
-1|War and Peace|Leo Tolstoy|978-0345472403
-2|The Brothers Karamazov|Fyodor Dostoyevsky|978-0486437910
-</code></pre>
+					<h3>What did all that do?</h3>
+					<p align="left">
+						<table style="font-size: 25px; line-height: 1.4em;">
+							<tr>
+								<td>--no-data</td>
+								<td>Without specifying no data, we were able to dump the whole database
+									including the data. For a large database
+							</tr>
+							<tr>
+								<td>specifying database &amp; table</td>
+								<td>Allows us to dump a single table in a given database rather
+									than the complete database.</td>
+							</tr>
+							<tr>
+								<td>--all-databases</td>
+								<td>Allows us to dump all the databases </td>
+							</tr>
+							<tr>
+								<td>--single-transaction</td>
+								<td>This is helpful for production environments. `mysqldump` locks
+								tables by default when dumping, meaning that live applications cannot
+							  access them. In InnoDB (which we are using), this flag allows you
+							  to run `mysqldump` without locking the database(s).</td>
+							</tr>
+						</table>
+					</p>
 				</section>
 
 				<section>
-					<h3>Inserting Rows</h3>
-					<p>We can insert a record without specifying column names.</p>
-					<pre><code contenteditable class="JavaScript">sqlite> INSERT INTO Books VALUES(3, 'Crime and Punishment', 'Fyodor Dostoevsky',
-   ...> '978-1840224306');
-</code></pre>
-					<p>In this case, we must supply all values in the same order as the columns in the table.</p>
+					<h3>Restoring a dump</h3>
+					<p align="left">To do this, we are going to create a small table, back
+						it up with `mysqldump`, delete it, and restore it. You will be going
+						between BASH and MySQL so be mindful of the prompts:</p>
+					<pre><code>mysql> USE mydatabase;
+mysql> CREATE TABLE sodapop (name VARCHAR(20), qty INT, \
+PRIMARY KEY (name));
+mysql> INSERT INTO sodapop VALUES ('Calpis', 10);
+mysql> INSERT INTO sodapop VALUES ('Julmust', 2);
+mysql> INSERT INTO sodapop VALUES ('Ramune', 5);
+mysql> INSERT INTO sodapop VALUES ('Vadelmalimonadi', 2);
+
+prompt> mysqldump -u root mydatabase sodapop > sodapop.sql
+
+mysql> DROP TABLE mydatabase.sodapop;
+mysql> SHOW TABLES IN mydatabase;
+
+prompt> mysql -u root mydatabase < sodapop.sql
+
+mysql> SHOW TABLES IN mydatabase;
+mysql> SELECT * FROM mydatabase.sodapop;</code></pre>
 				</section>
 
 				<section>
-					<h3>Null Values</h3>
-					<p>By default, SQLite will show empty strings for NULL values. We can change this behavior.</p>
-					<pre><code contenteditable class="JavaScript">sqlite> .nullvalue NULL
-</code></pre>
+					<h3>Quick but important note on Shell Syntax</h3>
+					 <p align="left">In a BASH shell, `>` redirects output <em>to</em> a file and
+						 `<` reads in <em>from</em> a file. So when we used `mysqldump ... > file` we
+						 directed the output of `mysqldump` to a file (otherwise it would just
+						 print on your screen) and when we used `mysql ... < file` the `mysql`
+						 command read the file and executed the commands it contained.</p>
 				</section>
 
 				<section>
-					<h3>Omitting Columns</h3>
-					<p>We can also insert records that are missing values for some columns.</p>
-					<pre><code contenteditable class="JavaScript">sqlite> INSERT INTO Books(Id, Title) VALUES(4, 'Paradise Lost');
-</code></pre>
-					<p>Note the difference between the NULL value for the unspecified column and the default value of "not available" for the description.</p>
-					<pre><code contenteditable class="JavaScript">sqlite> SELECT * FROM Books WHERE Id=4;
-Id|Title|Author|ISBN
-4|Paradise Lost|NULL|not available
-</code></pre>
+					<h3>Quick but important note on MySQL Syntax</h3>
+					 <p align="left">You may have noticed that instead of using `USE database_name;`
+					   for this exercise that we used `database_name.table_name`. This dot
+						 notation allows you to view, create, and modify tables without needing
+					   to select the database first. You only need to select the database if
+					   it is not specified in your SQL statement. This syntax is used in other
+					   SQL database engines as well, e.g. PostgreSQL.</p>
 				</section>
 
 				<section>
-					<h3>Updating Records</h3>
-					<p>Let's say we want to add the missing information for "Paradise Lost".</p>
-					<pre><code contenteditable class="JavaScript">sqlite> INSERT INTO Books VALUES(4, 'Paradise Lost', 'John Milton', '978-0486442877');
-Error: PRIMARY KEY must be unique
-sqlite> INSERT OR REPLACE INTO Books VALUES(4, 'Paradise Lost', 'John Milton',
-   ...> '978-0486442877');
-</code></pre>
-					<p>More commonly, you would use an UPDATE statement.</p>
+					<h3>Insert Review</h3>
+					<p align="left">A quick review of insert syntax:</p>
+					<pre><code>mysql> CREATE TABLE mydatabase.addressbook (name VARCHAR(50), \
+street VARCHAR(50), city VARCHAR(50), state VARCHAR(2), \
+zip VARCHAR(10), cell VARCHAR(10), PRIMARY KEY (name));
+
+mysql> INSERT INTO mydatabase.addressbook VALUES ('Jane Smith', \
+'123 Main St', 'Buffalo', 'NY', '14202', '111-222-3333');
+
+mysql> INSERT INTO mydatabase.addressbook (name, city, state, cell) \
+VALUES ('John Doe', 'Buffalo', 'NY', '444-555-6666');</pre></code>
+          <p align="left">Notice that we only need to include the names of the
+					  columns where we're inserting data if we aren't inserting data in all
+					  of them.</p>
 				</section>
 
 				<section>
-					<h3>Updating Records</h3>
-					<p>The UPDATE statement is used to change the value of columns in selected rows of a table.</p>
-					<p>Say we want to change "Leo Tolstoy" to "Lev Nikolayevich Tolstoy" in our Books table.</p>
-					<pre><code contenteditable class="JavaScript">sqlite> UPDATE Books SET Author='Lev Nikolayevich Tolstoy' WHERE Id=1;
-sqlite> SELECT * FROM Books WHERE Id=1;
-Id|Title|Author|ISBN
-1|War and Peace|Lev Nikolayevich Tolstoy|978-0345472403</code></pre>
-					<p>The row is correctly updated.</p>
+					<h3>GOTCHA!</h3>
+					<p align="left">There is a 'gotcha' when inserting missing values into
+						fields defined as being NOT NULL. (Where a 'gotcha' is not a bug,
+						just potentially unexpected behavior.) Try this:
+					</p>
+					<pre><code>mysql> INSERT INTO mydatabase.addressbook (city, state) \
+VALUES ('Buffalo', 'NY');</code></pre>
+					<p align="left">You might expect this to error since we haven't provided a
+						name and the name field is a primary key; however the <em>default value</em>
+						of a string field is an empty string and an empty string is not a NULL value.
+					</p>
+				</section>
+
+				<section>
+					<h3>NULL Clarification</h3>
+					<p align="left">It is important to understand what <em>is</em> and <em>is not</em> NULL.
+					  Simply put, a NULL value is a value that is completely unknown. A NULL
+					  value is <em>not</em> the 'zero-value' for your data type, e.g. 0 for numbers or an empty
+					  string for text/string fields.
+					</p>
+					<p align="left"><a href="http://www.tutorialspoint.com/sql/sql-null-values.htm">Check this out</a>
+						 for more information on NULL values.</p>
+				</section>
+
+				<section>
+					<h3>Try it!</h3>
+					<p align="left">What happens if:
+  					<ul>
+  						<li>...the missing field were a numeric field (e.g. an INT field) instead of a string field?</li>
+  						<li>...you try inserting another (city, state) pair of values into mydatabase.addressbook without specifying a value for the name key?</li>
+							<li>...you insert a record into a table where the missing column has a default value?</li>
+  					</ul>
+				  </p>
+				</section>
+
+				<section>
+					<h3>Modifying Records</h3>
+					<p align="left">Let's say that 'Jane Smith' is now 'Jane Deere' and that
+						we'd like to add a street address for 'John Doe':</p>
+						<pre><code>mysql> UPDATE mydatabase.addressbook SET \
+name='Jane Deere' WHERE name='Jane Smith';
+mysql> UPDATE mydatabase.addressbook SET \
+street='1031 Pumpkin King Rd' WHERE street IS NULL;</pre></code>
+          <p align="left">Take a look at your data and notice what happened with
+						that second statement. Always be mindful of your WHERE clauses!</p>
 				</section>
 
 				<section>
 					<h3>Deleting Records</h3>
-					<p>The DELETE keyword is used to delete data from tables.<p>
-					<pre><code contenteditable class="JavaScript">sqlite> DELETE FROM Books WHERE Id=1;
-SELECT * FROM Books;
-Id|Title|Author|ISBN
-2|The Brothers Karamazov|Fyodor Dostoyevsky|978-0486437910
-3|Crime and Punishment|Fyodor Dostoevsky|978-1840224306
-4|Paradise Lost|NULL|not available</code></pre>
-					<p><em><strong>WARNING: Like the DROP statement, DELETE can be destructive. Mind your WHERE clause!</strong></em></p>
+					<p align="left">Let's drop that nameless addressbook entry:</p>
+					<pre><code>mysql> DELETE FROM mydatabase.addressbook WHERE name='';</code></pre>
+					<p align="left">Easy come, easy go so we cannot emphasize this enough (but we'll try):<br /><br />
+						<em><strong>WARNING: DROPs and DELETEs are destructive. Mind your WHERE clause!</strong></em></p>
+					<p align="left">One more statement to drive this point home: what happens if you have <em>no</em> WHERE clause?</p>
+					<pre><code>mysql> DELETE FROM mydatabase.addressbook;</code></pre>
+					<p align="left">Spoiler: you nuked the table, that's what happened :) </p>
 				</section>
 
 				<section>
-					<h3>Deleting Records</h3>
-					<h4>Appetite for Destruction</h3>
-					<pre><code contenteditable class="JavaScript">sqlite> DELETE FROM Books;
-</code></pre>
-					<p>No WHERE clause means that this statement deletes all data in the table!</p>
-				</section>
-
-				<section>
-					<h3>Let's Develop It!</h3>
-					<p>Using the database you created in the first exercise, practice inserting, updating and deleting records.</p>
+					<h3>Bonus Round</h3>
+					<p align="left">Let's practice creating, modifying, and removing records. Some ideas:
+						<ul>
+							<li>Try using the IS NULL and/or the IS NOT NULL modifier in your statements.</li>
+							<li>Try using conditionals in your WHERE statements. e.g. for a numeric
+								column, try a statement where the values are greater or less than a specific value.</li>
+							<li>Try using a WHERE clause with more than one condition (hint: AND or OR).</li>
+						</ul>
+					</p>
+					<p align="left">Extra bonus: try to order your output either in ascending
+						or descending order (hint: ORDER BY ASC or DESC).</p>
 				</section>
 
         <section>
