@@ -46,7 +46,7 @@
 				<section>
 					<h3>Welcome!</h3>
 					<div class = "left-align">
-					<p>Girl Develop It is here to provide affordable and accessible programs to learn software through mentorship and hands-on instruction.</p>
+					<p align="left">Girl Develop It is here to provide affordable and accessible programs to learn software through mentorship and hands-on instruction.</p>
 					<p class ="green">Some "rules"</p>
 					<ul>
 						<li>We are here for you!</li>
@@ -65,7 +65,6 @@
 						<li>Bonus Material (time permitting):
 							<ul>
 								<li>Functions</li>
-								<li>Indexes</li>
 								<li>Views</li>
 								<li>Triggers</li>
 								<li>Transactions</li>
@@ -74,21 +73,30 @@
         </section>
 
 				<section>
+					<h3>Reminder: Accessing Student Workarea</h3>
+        	<p align="left"><ol>
+						<li>SSH into the student environment with the password 'p@ssw0rd':<br /><pre><code>ssh studentN@IPAddress</pre></code></li>
+						<li>Go into your docker container:<br /><pre><code>docker exec -it chinook-mysql-$(whoami) /bin/bash</pre></code></li>
+						<li>Start MySQL by simply running the 'mysql' command</li>
+					</ol></p>
+        </section>
+
+				<section>
 					<h3>Joining Tables</h3>
-					<p>Finally, the real power of SQL!</p>
-					<p>The SQL JOIN clause combines records from two or more tables in a database.
+					<p align="left">Finally, the real power of SQL!</p>
+					<p align="left">SQL JOIN clauses combine records from two or more tables in a database.
 					You will primarly use two types of joins, with some variations on these.</p>
 					<ul>
-						<li>Inner Join</li>
-						<li>Outer Join</li>
+						<li>INNER JOIN</li>
+						<li>OUTER JOIN</li>
 					</ul>
 				</section>
 
 				<section>
 					<h3>Our Tables</h3>
-					<p>To illustrate these joins, let's say we have TableA and TableB.
+					<p align="left">To illustrate these joins, let's say we have TableA and TableB.
 						We want to join these tables in a variety of ways.</p>
-					<pre><code contenteditable class="JavaScript">TableA                    TableB
+					<pre><code>TableA                    TableB
 =================          =================
 id    name                 id     name
 =================          =================
@@ -100,30 +108,41 @@ id    name                 id     name
 				</section>
 
 				<section>
-					<h3>INNER JOIN</h3>
+					<h3>How to create and populate the tables</h3>
+					<pre><code>mysql> CREATE DATABASE mydb;
+mysql> USE mydb;
+mysql> CREATE TABLE TableA (id INT NOT NULL AUTO_INCREMENT, \
+  name VARCHAR(20) NOT NULL, PRIMARY KEY (id));
+mysql> CREATE TABLE TableB (id INT NOT NULL AUTO_INCREMENT, \
+  name VARCHAR(20) NOT NULL, PRIMARY KEY (id));
+mysql> INSERT INTO TableA (name) VALUES \
+  ('Pirate'), ('Monkey'), ('Ninja'), ('Spaghetti');
+mysql> INSERT INTO TableB (name) VALUES \
+  ('Rutabaga'), ('Pirate'), ('Darth Vader'), ('Ninja');
+</code></pre>
+				</section>
+
+				<section>
+					<h3>Getting Started: INNER JOIN</h3>
 					<ul>
-						<li>The Inner Join is the most common type of join.</li>
-						<li>It's so common that it's the default join type for SQLite.</li>
-						<li>Selects only records that match both of the tables you are joining.</li>
+						<li>The INNER JOIN is the most common type of join.</li>
+						<li>It's so common that it's the default join type for MySQL, PostgreSQL, and many others.</li>
+						<li>An INNER JOIN selects only records that match both of the tables you are joining.</li>
 					</ul>
-					<pre><code contenteditable class="JavaScript">TableA                    TableB
-=================          =================
-id    name                 id     name
-=================          =================
-1     Pirate               1      Rutabaga
-2     Monkey               2      Pirate
-3     Ninja                3      Darth Vader
-4     Spaghetti            4      Ninja
-</code></pre>
 				</section>
 
 				<section>
-					<h3>Inner Join</h3>
-					<p>Selects only the records that match both TableA and TableB</p>
-					<img style="height:250px" src="images/innerjoin.png"/>
-					<pre><code contenteditable class="JavaScript">SELECT * from TableA
-INNER JOIN TableB
-ON TableA.name = TableB.name;
+					<h3>Visualizing the INNER JOIN</h3>
+					<p align="left">The shaded portion is the data that would be returned by an INNER JOIN of tables A and B:</p>
+					<table>
+						<tr>
+							<td><img style="height:250px" src="images/innerjoin.png"/></td>
+							<td><img src="images/class4-tables-for-joins.png"/></td>
+						</tr>
+					</table>
+					<pre><code>SELECT * FROM TableA \
+  INNER JOIN TableB \
+  ON TableA.name = TableB.name;
 
 =================          =================
 id    name                 id     name
@@ -134,79 +153,86 @@ id    name                 id     name
 				</section>
 
 				<section>
-					<h3>Let's Develop It!</h3>
-					<p>Write a SQL Query that returns the following from the Chinook Database.</p>
-					<ul>
-						<li>Album Id</li>
-						<li>Album Title</li>
-						<li>Artist Name</li>
-					</ul>
-				</section>
+					<h3>LEFT OUTER JOIN</h3>
+					<p align="left">The LEFT OUTER JOIN produces all records from TableA, with matching records
+						from TableB if they are available. If there is no matching record, it will have a NULL value.</p>
+					<table>
+						<tr>
+							<td><img style="height:250px" src="images/leftouterjoin.png"/></td>
+							<td><img src="images/class4-tables-for-joins.png"/></td>
+						</tr>
+					</table>
+					<pre><code>SELECT * FROM TableA \
+  LEFT OUTER JOIN TableB \
+  ON TableA.name = TableB.name;
 
-				<section>
-					<h3>Solution</h3>
-					<pre><code contenteditable class="JavaScript">SELECT Album.AlbumId, Album.Title as AlbumTitle,
-    Artist.Name as ArtistName
-FROM Album
-JOIN Artist
-    ON Album.ArtistId = Artist.ArtistId;
+=================          =================
+id    name                 id     name
+=================          =================
+1     Pirate               2      Pirate
+2     Monkey               null   null
+3     Ninja                4      Ninja
+4     Spaghetti            null   null
 </code></pre>
 				</section>
 
 				<section>
-					<h3>Let's Develop It!</h3>
-					<p>Write a SQL Query that returns the following from the Chinook Database.</p>
-					<ul>
-						<li>Artist Name</li>
-						<li>Album Title</li>
-						<li>Track Name</li>
-						<li>Genre Name</li>
-						<li>Composer</li>
-						<li>Unit Price</li>
-					</ul>
+					<h3>Records in TableA, but not TableB</h3>
+					<p align="left">We're going to make use of the fact that LEFT OUTER JOIN
+						gives us NULL values for the right side if there were no corresponding
+						record in the left.</p>
+					<table>
+						<tr>
+							<td><img style="height:250px" src="images/in_a_but_not_b.png"/></td>
+							<td><img src="images/class4-tables-for-joins.png"/></td>
+						</tr>
+					</table>
+					<pre><code>SELECT * FROM TableA \
+  LEFT OUTER JOIN TableB \
+  ON TableA.name = TableB.name \
+  WHERE TableB.id IS NULL;
+
+=================          =================
+id    name                 id     name
+=================          =================
+2     Monkey	          null   null
+4     Spaghetti            null   null
+</code></pre>
 				</section>
 
 				<section>
-					<h3>Solution</h3>
-					<pre><code contenteditable class="JavaScript">SELECT Artist.Name, Album.Title as AlbumTitle,
-    Track.Name as TrackName, Genre.Name,
-    Track.Composer, Track.UnitPrice
-FROM Album
-JOIN Artist
-    ON Album.ArtistId = Artist.ArtistId
-JOIN Track
-    ON Track.AlbumId = Album.AlbumId
-JOIN Genre
-    ON Genre.GenreId = Track.GenreId;
-</code></pre>
+					<h3>Another way: using NOT IN</h3>
+					<p align="left">As with all things, there is more than one way to do a
+						task. Let's try using the NOT IN clause:</p>
+					<pre><code>mysql> SELECT * FROM TableA \
+  WHERE TableA.name NOT IN (SELECT TableB.name FROM TableB);</code></pre>
+	        <p align="left">How does this resulting data set differ from that
+						returned by the LEFT OUTER JOIN?</p>
 				</section>
 
 				<section>
 					<h3>FULL OUTER JOIN</h3>
 					<ul>
-						<li>The Full Outer Join produces all sets of records in TableA and TableB.</li>
+						<li>A FULL OUTER JOIN produces all sets of records in TableA and TableB.</li>
 						<li>Records from both sides are included, where available.</li>
-						<li>If there is no matching record, the missing side will have a null value.</li>
-						<li><em>Note: Full Outer Joins are not supported by SQLite</em></li>
+						<li>If there is no matching record, the missing side will be NULL.</li>
+						<li>FULL OUTER JOINs are not supported by MySQL and SQLite,
+							but there are <a href="http://www.xaprb.com/blog/2006/05/26/how-to-write-full-outer-join-in-mysql/">multiple
+							ways</a> of getting the same results if desired.</li>
 					</ul>
-					<pre><code contenteditable class="JavaScript">TableA                    TableB
-=================          =================
-id    name                 id     name
-=================          =================
-1     Pirate               1      Rutabaga
-2     Monkey               2      Pirate
-3     Ninja                3      Darth Vader
-4     Spaghetti            4      Ninja
-</code></pre>
 				</section>
 
 				<section>
 					<h3>FULL OUTER JOIN</h3>
-					<p>Selects all sets of records from TableA and TableB.</p>
-					<img style="height:250px" src="images/fullouterjoin.png"/>
-					<pre><code contenteditable class="JavaScript">SELECT * from TableA
-FULL OUTER JOIN TableB
-ON TableA.name = TableB.name;
+					<table>
+						<tr>
+							<td><img style="height:250px" src="images/fullouterjoin.png"/></td>
+							<td><img src="images/class4-tables-for-joins.png"/></td>
+						</tr>
+					</table>
+					<pre><code>SELECT * FROM TableA \
+  FULL OUTER JOIN TableB \
+  ON TableA.name = TableB.name;
 
 =================          =================
 id    name                 id     name
@@ -221,104 +247,33 @@ null  null                 3      Darth Vader
 				</section>
 
 				<section>
-					<h3>LEFT OUTER JOIN</h3>
-					<ul>
-						<li>The Left Outer Join produces all records from TableA, with matching records
-							from TableB if they are available.</li>
-						<li>If there is no matching record in TableB, the right side will have a null value.</li>
-					</ul>
-					<pre><code contenteditable class="JavaScript">TableA                    TableB
-=================          =================
-id    name                 id     name
-=================          =================
-1     Pirate               1      Rutabaga
-2     Monkey               2      Pirate
-3     Ninja                3      Darth Vader
-4     Spaghetti            4      Ninja
-</code></pre>
+					<h3>Simulating the FULL OUTER JOIN: ONE SOLUTION</h3>
+					<p align="left">Since conceptually a FULL OUTER JOIN is essentially the
+						UNION of a LEFT and RIGHT JOIN, one straightfoward way to get the same
+						data set (sans NULLs) is to do exactly that:</p>
+					<pre><code>mysql> SELECT * FROM TableA AS a \
+  LEFT OUTER JOIN TableB AS b ON a.id = b.id \
+  UNION \
+  SELECT * FROM TableA AS a \
+  RIGHT OUTER JOIN TableB AS b ON a.id = b.id;</code></pre>
+	        <p align="left">How does this data set differ from the FULL OUTER JOIN? <br />
+						What are some other ways of solving this problem?</p>
 				</section>
 
 				<section>
-					<h3>LEFT OUTER JOIN</h3>
-					<p>Selects all sets of records from TableA and TableB.</p>
-					<img style="height:250px" src="images/leftouterjoin.png"/>
-					<pre><code contenteditable class="JavaScript">SELECT * from TableA
-LEFT OUTER JOIN TableB
-ON TableA.name = TableB.name;
-
-=================          =================
-id    name                 id     name
-=================          =================
-1     Pirate               2      Pirate
-2     Monkey	             null   null
-3     Ninja                4      Ninja
-4     Spaghetti            null   null
-</code></pre>
-				</section>
-
-				<section>
-					<h3>Records in TableA, but not TableB</h3>
-					<ul>
-						<li>Let's say we want to know all of the records in TableA that don't also appear in TableB.</li>
-						<li>We can do this by adding a WHERE clause to our left outer join.</li>
-					</ul>
-					<pre><code contenteditable class="JavaScript">TableA                    TableB
-=================          =================
-id    name                 id     name
-=================          =================
-1     Pirate               1      Rutabaga
-2     Monkey               2      Pirate
-3     Ninja                3      Darth Vader
-4     Spaghetti            4      Ninja
-</code></pre>
-				</section>
-
-				<section>
-					<h3>Records in TableA, but not TableB</h3>
-					<p>Remember that the left outer join gave us null values for the right
-						side if there was no corresponding record in TableB. We can now use
-					this information to isolate the records we want.</p>
-					<img style="height:250px" src="images/in_a_but_not_b.png"/>
-					<pre><code contenteditable class="JavaScript">SELECT * from TableA
-LEFT OUTER JOIN TableB
-ON TableA.name = TableB.name
-WHERE TableB.id IS null;
-
-=================          =================
-id    name                 id     name
-=================          =================
-2     Monkey	          null   null
-4     Spaghetti            null   null
-</code></pre>
-				</section>
-
-				<section>
-					<h3>Records in TableA OR TableB, but not in both</h3>
-					<ul>
-						<li>Let's say we want to know all of the records in TableA or TableB,
-							but want to exclude records that appear in both.</li>
-						<li>We can do this by adding a WHERE clause to a full outer join.</li>
-					</ul>
-					<pre><code contenteditable class="JavaScript">TableA                    TableB
-=================          =================
-id    name                 id     name
-=================          =================
-1     Pirate               1      Rutabaga
-2     Monkey               2      Pirate
-3     Ninja                3      Darth Vader
-4     Spaghetti            4      Ninja
-</code></pre>
-				</section>
-
-				<section>
-					<h3>Records in TableA OR TableB, but not in both</h3>
-					<p>This will give us records unique to TableA OR TableB.</p>
-					<img style="height:250px" src="images/unique_to_a_and_b.png"/>
-					<pre><code contenteditable class="JavaScript">SELECT * from TableA
-FULL OUTER JOIN TableB
-ON TableA.name = TableB.name
-WHERE TableA.id IS null
-OR TableB.id IS null;
+					<h3>Records in either table, but not both</h3>
+					<p align="left">Obtaining records unique to TableA <em><strong>or</strong></em> TableB.</p>
+					<table>
+						<tr>
+							<td><img style="height:250px" src="images/unique_to_a_and_b.png"/></td>
+							<td><img src="images/class4-tables-for-joins.png"/></td>
+						</tr>
+					</table>
+					<pre><code>SELECT * FROM TableA \
+  FULL OUTER JOIN TableB \
+  ON TableA.name = TableB.name \
+  WHERE TableA.id IS NULL \
+  OR TableB.id IS NULL;
 
 =================          =================
 id    name                 id     name
@@ -331,181 +286,193 @@ null  null                 3      Darth Vader
 				</section>
 
 				<section>
-					<h3>Let's Develop It!</h3>
-					<p>Write a SQL query that returns album and track information for
+					<h3>Now without the FULL OUTER JOIN</h3>
+					<p align="left">How would you solve the problem on the previous slide
+					  <em>without</em> a FULL OUTER JOIN?</p>
+				</section>
+
+				<section>
+					<h3>One Solution</h3>
+					<pre><code>mysql> SELECT * FROM TableA \
+  WHERE TableA.name NOT IN (SELECT TableB.name FROM TableB) \
+  UNION \
+  SELECT * FROM TableB \
+  WHERE TableB.name NOT IN (SELECT TableA.name FROM TableA);</code></pre>
+				</section>
+
+        <section>
+        	<h3>Practice</h3>
+        	<p align="left">Write a SQL Query that returns the following from the Chinook Database.</p>
+        	<ul>
+        		<li>Album ID</li>
+        		<li>Album Title</li>
+        		<li>Artist Name</li>
+        	</ul>
+					<p align="left"><br />Hint: You might want to limit the number of records
+						returned by your query unless you want a wall of output.</p>
+        </section>
+
+        <section>
+        	<h3>Solution</h3>
+        	<pre><code>SELECT Album.AlbumId, Album.Title AS AlbumTitle, \
+  Artist.Name AS ArtistName \
+  FROM Album \
+  JOIN Artist \
+  ON Album.ArtistId = Artist.ArtistId \
+  LIMIT 10;
+        </code></pre>
+        </section>
+
+        <section>
+        	<h3>Practice</h3>
+        	<p align="left">Write a SQL Query that returns the following from the Chinook Database.</p>
+        	<ul>
+        		<li>Artist Name</li>
+        		<li>Album Title</li>
+        		<li>Track Name</li>
+        		<li>Genre Name</li>
+        		<li>Composer</li>
+        		<li>Unit Price</li>
+        	</ul>
+        </section>
+
+        <section>
+        	<h3>Solution</h3>
+        	<pre><code>SELECT Artist.Name, Album.Title AS AlbumTitle, \
+  Track.Name AS TrackName, Genre.Name, \
+  Track.Composer, Track.UnitPrice \
+  FROM Album \
+  JOIN Artist \
+  ON Album.ArtistId = Artist.ArtistId \
+  JOIN Track \
+  ON Track.AlbumId = Album.AlbumId \
+  JOIN Genre \
+  ON Genre.GenreId = Track.GenreId \
+  LIMIT 10;
+        </code></pre>
+        </section>
+
+				<section>
+					<h3>Practice</h3>
+					<p align="left">Write a SQL query that returns album and track information for
 						tracks where the composer information is missing.</p>
 				</section>
 
 				<section>
 					<h3>Solution</h3>
-					<pre><code contenteditable class="JavaScript">SELECT * from Album
-JOIN Track
-    ON Track.AlbumId = Album.AlbumId
-WHERE Track.Composer IS null;
+					<pre><code>SELECT * FROM Album \
+  JOIN Track \
+      ON Track.AlbumId = Album.AlbumId \
+  WHERE Track.Composer IS NULL\
+  LIMIT 10;
 </code></pre>
 				</section>
 
 				<section>
 					<h3>Ordering Data</h3>
-					<p>Data from a SELECT statement can be ordered with the ORDER BY clause.</p>
-					<pre><code contenteditable class="JavaScript">SELECT * from Invoice
-ORDER BY InvoiceDate DESC;
+					<p align="left">Data from a SELECT statement can be ordered with the ORDER BY clause.</p>
+					<pre><code>SELECT * FROM Invoice \
+  ORDER BY InvoiceDate DESC \
+  LIMIT 10;
 </code></pre>
-					<p>The results will be ordered from newest to oldest. Following the
+					<p align="left">The results will be ordered from newest to oldest. Following the
 						keyword with ASC gives us the reverse order.</p>
 				</section>
 
 				<section>
 					<h3>Group By</h3>
-					<p>Data can also be grouped by identical values using the GROUP BY clause.</p>
-					<pre><code contenteditable class="JavaScript">SELECT * from Invoice
-GROUP BY CustomerId;
+					<p align="left">Data can also be grouped by identical values using the GROUP BY clause.</p>
+					<pre><code>SELECT * from Invoice \
+  GROUP BY CustomerId \
+  LIMIT 10;
 </code></pre>
-					<p>This query will return all invoices grouped by customer.</p>
+					<p align="left">This query will return the first 10 invoices grouped by customer.</p>
 				</section>
 
 				<section>
 					<h3>Functions</h3>
-					<p>SQLite has three types of functions:</p>
+					<p align="left">MySQL has three types of functions:</p>
 					<ul>
-						<li>Core functions</li>
+						<li>Control flow functions</li>
+						<li>String functions</li>
 						<li>Aggregate functions</li>
 						<li>Date &amp; Time functions</li>
 					</ul><br><br>
-					<p>Functions give you built-in functionality that allow you to do more with your data.</p>
+					<p align="left">Functions give you built-in functionality that allow you to do more with your data.</p>
 				</section>
 
 				<section>
-					<h3>Core Functions</h3>
-					<table>
-						<tr>
-							<td style="width:30%">sqlite_version()</td>
-							<td>Returns the version of the SQLite library</td>
-						</tr>
-						<tr>
-							<td>random()</td>
-							<td>Returns a pseudo-random integer</td>
-						</tr>
-						<tr>
-							<td>abs()</td>
-							<td>Returns the absolute value of a numerical argument</td>
-						</tr>
-						<tr>
-							<td>max()</td>
-							<td>Returns the maximum value</td>
-						</tr>
-						<tr>
-							<td>min()</td>
-							<td>Returns the minimum value</td>
-						</tr>
-						<tr>
-							<td>upper()</td>
-							<td>Converts characters into upper case</td>
-						</tr>
-						<tr>
-							<td>lower()</td>
-							<td>Converts characters into lower case</td>
-						</tr>
-						<tr>
-							<td>length()</td>
-							<td>Returns the length of a string of text</td>
-						</tr>
-						<tr>
-							<td>total_changes()</td>
-							<td>Returns the number of row changes since the current database connection was opened.</td>
-						</tr>
-					</table>
+					<h3>Control Flow Functions</h3>
+					<pre><code>mysql> SELECT BillingCity, \
+  IF(BillingState IS NULL, 'N/A', BillingState) BillingState, \
+  BillingCountry FROM Chinook.Invoice LIMIT 30;
+
+mysql> SELECT BillingCity, IFNULL(BillingState, 'N/A') BillingState, \
+  BillingCountry FROM Chinook.Invoice LIMIT 30;
+
+mysql> SELECT BillingCity, IFNULL(BillingState, 'N/A') BillingState, \
+  BillingCountry FROM Chinook.Invoice ORDER BY (CASE \
+    WHEN BillingState IS NULL THEN BillingCountry \
+    ELSE BillingState \
+  END) LIMIT 30;</code></pre>
+				</section>
+
+				<section>
+					<h3>String Functions (data)</h3>
+					<pre><code>mysql> CREATE TABLE IF NOT EXISTS mydb.divisions (
+id INT AUTO_INCREMENT PRIMARY KEY,
+name VARCHAR(25) NOT NULL,
+belts VARCHAR(200) NOT NULL);
+
+mysql> INSERT INTO mydb.divisions(name,belts)
+VALUES ('O-1','white,yellow,orange'),
+('O-2','purple,green,blue'),
+('O-3','brown,red,black'),
+('O-4','white,yellow,orange'),
+('O-5','purple,green,blue'),
+('O-6','brown,red'),
+('O-7','black'),
+('O-8','white,yellow,orange'),
+('O-9','purple,green,blue'),
+('O-10','brown,red');</code></pre>
+				</section>
+
+				<section>
+					<h3>String Functions</h3>
+					<pre><code>mysql> SELECT name, belts FROM mydb.divisions WHERE \
+FIND_IN_SET('red', belts);
+
+mysql> SELECT SUBSTRING(belts, 1, 10) FROM mydb.divisions;
+
+mysql> SELECT * FROM mydb.divisions;
+mysql> UPDATE mydb.divisions SET belts=REPLACE(belts, 'white', 'gold');
+mysql> SELECT * FROM mydb.divisions;
+
+mysql> SELECT CONCAT(name, ':', belts) FROM mydb.divisions;</code></pre>
 				</section>
 
 				<section>
 					<h3>Aggregate Functions</h3>
-					<table>
-						<tr>
-							<td style="width:40%">count(*)</td>
-							<td>Returns the number of rows matching the query</td>
-						</tr>
-						<tr>
-							<td>count(id)</td>
-							<td>Returns the number of rows matching the query where the given column is not null</td>
-						</tr>
-						<tr>
-							<td>count(DISTINCT col)</td>
-							<td>Using DISTINCT with count returns the unique count</td>
-						</tr>
-						<tr>
-							<td>avg()</td>
-							<td>Returns the average value of all non-null values</td>
-						</tr>
-						<tr>
-							<td>sum()</td>
-							<td>Returns the sum of all non-null values</td>
-						</tr>
-					</table>
+					<pre><code>mysql> SELECT AVG(Total) avg_cost FROM Chinook.Invoice;
+mysql> SELECT COUNT(*) AS total_qty FROM Chinook.Invoice;
+mysql> SELECT SUM(Total) total_amt FROM Chinook.Invoice;
+mysql> SELECT MAX(Total) most_expensive FROM Chinook.Invoice;
+mysql> SELECT MIN(Total) least_expensive FROM Chinook.Invoice;</code></pre>
 				</section>
 
 				<section>
 					<h3>Date &amp; Time Functions</h3>
-					<table>
-						<tr>
-							<td>date('now')</td>
-							<td>Returns the current date (Example: 2014-01-01)</td>
-						</tr>
-						<tr>
-							<td>datetime('now')</td>
-							<td>Returns the current date and time (Example: 2014-01-01 13:12:01)</td>
-						</tr>
-						<tr>
-							<td>time('now')</td>
-							<td>Return the current time (Example: 13:12:01)</td>
-						</tr>
-					</table>
+					<pre><code>mysql> SELECT InvoiceId, \
+DATE_FORMAT(InvoiceDate, '%Y-%m-%d') InvoiceDate, \
+DATEDIFF(NOW(), InvoiceDate)/365.25 age_of_invoice_yrs \
+FROM Chinook.Invoice LIMIT 10;</code></pre>
+          <p align="left">Note the use of the DATE_FORMAT, DATEDIFF, and NOW
+						functions. What does each function do?</p>
 				</section>
 
 				<section>
-					<h3>Date &amp; Time Modifiers</h3>
-					<p>You can pass one or more modifiers to the date(), time() and datetime() functions.</p>
-					<pre><code contenteditable class="JavaScript">sqlite> SELECT date('now', '2 months');
-2014-07-29
-</code></pre>
-					<p>Months and days can be passed as a modifier to add to the current date.</p>
-					<pre><code contenteditable class="JavaScript">sqlite> SELECT date('now', '-55 days');
-2014-04-04
-</code></pre>
-					<p>Likewise, you can subtract months and days.</p>
-				</section>
-
-				<section>
-					<h3>Date &amp; Time Modifiers</h3>
-					<p>Other modifiers include:</p>
-					<table>
-						<tr>
-							<td style="width:30%">'start of year'</td>
-							<td>Returns the start of the year</td>
-						</tr>
-						<tr>
-							<td>'start of day'</td>
-							<td>Returns the start of the day (00:00:00)</td>
-						</tr>
-						<tr>
-							<td>'weekday 0'</td>
-							<td>Advances to to the next date where the day of the week matches the number passed,
-								where 0 is Sunday, 1 is Monday, ..., Saturday is 6.</td>
-						</tr>
-					</table>
-				</section>
-
-				<section>
-					<h3>Date &amp; Time Modifiers</h3>
-					<p>What is the first Monday of next year?</p>
-					<pre><code contenteditable class="JavaScript">sqlite> SELECT datetime('now', '12 months', 'start of year',
-   ...> 'weekday 1');
-2015-01-05 00:00:00
-</code></pre>
-				</section>
-
-				<section>
-					<h3>Let's Develop It!</h3>
-					<p>Write SQL queries to answer the following questions about the Chinook data.</p>
+					<h3>Practice</h3>
+					<p align="left">Write SQL queries to answer the following questions about the Chinook data.</p>
 					<ul>
 						<li>If you bought one copy of every track, how much would you spend?</li>
 						<li>What is the average track price in our store?</li>
@@ -518,14 +485,9 @@ GROUP BY CustomerId;
 					<h3>Solutions</h3>
 					<ul>
 						<li>If you bought one copy of every track, how much would you spend?<br>
-						<pre><code contenteditable class="JavaScript">sqlite> SELECT sum(UnitPrice) from Track;
-3680.969999999704
-	</code></pre>
-					</li>
+						  <pre><code>mysql> SELECT SUM(UnitPrice) from Chinook.Track;</code></pre></li>
 						<li>What is the average track price in our store?<br>
-						<pre><code contenteditable class="JavaScript">sqlite> SELECT avg(UnitPrice) as 'Average Price' FROM Track;
-1.0508050242648312
-	</code></pre></li>
+						  <pre><code>mysql> SELECT AVG(UnitPrice) as 'Average Price' FROM Chinook.Track;</code></pre></li>
 					</ul>
 				</section>
 
@@ -533,59 +495,45 @@ GROUP BY CustomerId;
 					<h3>Solutions</h3>
 					<ul>
 						<li>How many genres of music are represented by tracks sold in our store?<br>
-						<pre><code contenteditable class="JavaScript">sqlite> SELECT count(DISTINCT GenreId) from Track;
-25
-	</code></pre></li>
+						  <pre><code>mysql> SELECT COUNT(DISTINCT GenreId) from Chinook.Track;</code></pre></li>
 						<li>How many artists have albums in our store?<br>
-						<pre><code contenteditable class="JavaScript">sqlite> SELECT count(DISTINCT ArtistId) from Album;
-204
-	</code></pre></li>
+						  <pre><code>mysql> SELECT COUNT(DISTINCT ArtistId) from Chinook.Album;</code></pre></li>
 					</ul>
 					</section>
 
 					<section>
 						<h3>Advanced Topics</h3>
-						<h4>Indexes</h4>
-						<p>Indexes are a special lookup table that an RDBMS uses to speed up data retrieval.</p>
-						<p>We can think of an index in a database as being similar to an index in the back of a book.</p>
-						<pre><code contenteditable class="JavaScript">sqlite> CREATE INDEX salary_index ON COMPANY (salary);
-	</code></pre>
-						<p>You can list all of the indexes on a TableBy using the <em>.indices TABLE</em> command.
-						<pre><code contenteditable class="JavaScript">sqlite> .indices Employee
-IFK_EmployeeReportsTo
-IPK_Employee
-	</code></pre>
-					</section>
-
-					<section>
-						<h3>Advanced Topics</h3>
 						<h4>Views</h4>
-						<p>Views are a specific look at data from one or more tables.</p>
-						<p>You can think of a view as the results of a query that can be accessed as a virtual table</p>
-						<p>A view is not a part of the physical schema of a database, and
+						<p align="left">Views are a specific look at data from one or more tables.</p>
+						<p align="left">You can think of a view as the results of a query that can be accessed as a virtual table</p>
+						<p align="left">A view is not a part of the physical schema of a database, and
 							its values are computed dynamically from the data in the database.</p>
-						<pre><code contenteditable class="JavaScript">sqlite> CREATE VIEW cheap_tracks AS SELECT * FROM Track WHERE UnitPrice <= 0.99;
-	</code></pre>
+						<pre><code>mysql> CREATE VIEW low_cost \
+AS SELECT * FROM Chinook.Invoice WHERE Total < 2;
+
+mysql> SELECT * FROM low_cost LIMIT 10;</code></pre>
 					</section>
 
 					<section>
 						<h3>Advanced Topics</h3>
 						<h4>Triggers</h4>
-						<p>Triggers are database operations that are automatically performed when a specific
+						<p align="left">Triggers are database operations that are automatically performed when a specific
 						event occurs in your database.</p>
-						<p>Among other things, triggers often used to insert records into log tables when changes are made to data.</p>
-						<p>Creating triggers is beyond the scope of this class, but know they exist.</p>
+						<p align="left">Among other things, triggers often used to insert records into log tables when changes are made to data.</p>
+						<p align="left">Creating triggers is beyond the scope of this class, but know they exist.
+							<a href="http://www.mysqltutorial.org/mysql-triggers.aspx">Here is a resource</a> for a introduction to MySQL triggers.</p>
 					</section>
 
 					<section>
 						<h3>Advanced Topics</h3>
 						<h4>Transactions</h4>
-						<p>A transaction is an atomic unit of database operations.</p>
-						<p>The effect of a transaction is that either all of the SQL statements
+						<p align="left">A transaction is an atomic unit of database operations.</p>
+						<p align="left">The effect of a transaction is that either all of the SQL statements
 							in a transaction are committed to the database, or all of them are rolled back (no changes).</p>
-						<p>A transaction begins with the BEGIN TRANSACTION statement, followed by COMMIT or ROLLBACK.</p>
-						<p>Transactions are beyond the scope of this class, but good to learn if you are dealing with
-							a group of changes that are "all or nothing".</p>
+						<p align="left">A transaction begins with the BEGIN TRANSACTION statement, followed by COMMIT or ROLLBACK.</p>
+						<p align="left">Transactions are beyond the scope of this class, but good to learn if you are dealing with
+							a group of changes that are "all or nothing".
+							<a href="https://www.tutorialspoint.com/mysql/mysql-transactions.htm">Here is a resource</a> for an introduction to MySQL transactions.</p>
 					</section>
 
 					<section>
@@ -596,6 +544,8 @@ IPK_Employee
 								A Visual Explanation of SQL Joins</a>, from which the join explanations in this class were borrowed.</li>
 							<li><a href="http://mivuletech.wordpress.com/2011/03/22/an-overview-of-relational-algebra-operators-and-their-sql-translations/">
 								An Overview of Relational Algebra Operators and Their SQL Translations</a></li>
+								<li><a href="http://sql-info.de/mysql/gotchas.html"><strong>List of MySQL "Gotchas"</strong></a> - "It's not a bug - it's a gotcha. A "gotcha" is a feature or function which works as advertised - but not as expected."<br />Here is a comparable list of <a href="http://sql-info.de/postgresql/postgres-gotchas.html"><strong>PostgreSQL "Gotchas"</strong></a> for reference.</li>
+								<li><a href="https://azure.microsoft.com/en-us/documentation/articles/documentdb-nosql-vs-sql/"><strong>NoSQL vs SQL</strong></a> - You may recall we briefly mentioned that not all RDBMSes support SQL. Here is a quick overview of SQL and NoSQL.</li>
 						</ul>
 					</section>
 
